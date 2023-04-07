@@ -1,0 +1,126 @@
+﻿,Questions,cluster
+0,what is the assertions?,1
+1,What is meant by assertions?,1
+2,what is known as assertions?,1
+3,describe the assertions?,1
+4,what is assertion in system Verilog?,1
+5,Explain the assertions?,1
+6,Assertions in System Verilog?,1
+7,Explain breifly about assertions?,1
+8,What is the role of assertions in SV,1
+9,Tell me about the assertions,1
+10,Assertions,1
+11,Importance of assertions,2
+12,why are assertions are important to write a testebench,2
+13,What are advantages of assertions?,2
+14,what are pros of assertions?,2
+15,what are the merits of assertions?,2
+16,what are the benefits of assertions?,2
+17,Why it is necessary to write the assertions?,2
+18,Can you explain why assertions are important?,2
+19,Advantages of assertions,2
+20,what is the importance of assertions in sv?,2
+21,Merits of assertions,2
+22,what are the uses of assertions?,3
+23,How can assertions be used?,3
+24,where we use assertions in System Verilog?,3
+25,why do we need assertions in sv?,3
+26,where assertions can be used in sv?,3
+27,How to use assertions?,3
+28,In what way assertions can be used?,3
+29,Does assertions are written in testbench,3
+30,Can we write assertions in design,3
+31,Uses of assertions,3
+32,types of assertions,4
+33,types of assertions in sv?,4
+34,how many types are there in assertions in sv?,4
+35,how many types of assertions?,4
+36,how many kinds of assertions?,4
+37,Assertion types,4
+38,In how many ways does the assertions can be implemented?,4
+39,how many different types of assertions,4
+40,Different types of assertions,4
+41,what are the types of assertions?,4
+42,what are immediate assertions?,5
+43,what meant by immediate assertions?,5
+44,what is known as immediate assertion?,5
+45,describe immediate assertion?,5
+46,what is immediate assertion in system verilog?,5
+47,what is immediate assertion syntax?,5
+48,Syntax of immediate assertion?,5
+49,immediate assertion syntax?,5
+50,what is immediate assertion example?,5
+51,immediate assertions,5
+52,Example of immediate assertion?,5
+53,What are severity levels in assertions?,6
+54,severity levels in assertions?,6
+55,How many types of severity levels in assertions?,6
+56,types of severity levels in assertions?,6
+57,what is meant by severity level?,6
+58,Describe severity level,6
+59,what are the different levels of severity,6
+60,Use of severity levels in assertions?,6
+61,where are severity levels used in assertions?,6
+62,concurrent assertions ,7
+63,what is concurrent assertion in sv?,7
+64,what meant by concurrent assertion?,7
+65,what is known as concurrent assertion?,7
+66,describe concurrent assertion?,7
+67,what is concurrent assertion in system Verilog?,7
+68,what is concurrent assertions syntax?,7
+69,syntax of concurrent assertion?,7
+70,what is concurrent assertions example?,7
+71,Example of concurrent assertion?,7
+72,concurrent assertions example?,7
+73,what is the property role in concurrent assertions?,8
+74,Why we use the property in concurrent assertions?,8
+75,what is the use of property in concurrent assertions?,8
+76,what is the property in assertions?,8
+77,property in assertions?,8
+78,Define the property in assertions?,8
+79,How to declare the property in concurrent assertions?,8
+80,How to define the property in concurrent assertion?,8
+81,what is the synatx of property in concurrent assertions?,8
+82,Syntax of property in concurrent assertion?,8
+83,what is sequence in assertions?,9
+84,what meant by sequence in assertions,9
+85,what is known as sequence in assertions,9
+86,describe sequence in assertions?,9
+87,what is sequence in assertion in system verilog?,9
+88,what is the syntax of sequence in assertions?,9
+89,syntax of sequence in assertions?,9
+90,How many types of sequences in assertions?,9
+91,types of sequences in assertions?,9
+92,what are the examples of sequence in assertions?,9
+93,examples of sequence in assertions?,9
+94,give me some examples on sequence in assertions?,9
+95,Empty sequence ,10
+96,what is meant by empty sequence?,10
+97,Empty sequence in assertion,10
+98,explain about empty sequence,10
+99,how to use empty sequence,10
+100,empty sequences,10
+101,how to simplify the sequence in assertions,10
+102,where can be empty sentences can be used,10
+103,Describe empty sequence,10
+104,what is empty sequence?,10
+105,Empty sequence in assertions?,10
+106,clock resolution,11
+107,what is clock resolution?,11
+108,how many different ways to specify the clock in assertions,11
+109,how many different ways to specify the clock in assertions,11
+110,clock resolution in assertions?,11
+111,how many ways to specify the clock in assertions?,11
+112,different ways to specify the clock in assertions?,11
+113,specify the clock in assertions,11
+114,how many ways to specify the clock?,11
+115,different ways to specify the clock?,11
+116,What is implication operator?,12
+117,what meant by implication operator?,12
+118,what is known as implication operator?,12
+119,implication operator,12
+120,implication operators,12
+121,what is implication operators?,12
+122,what is meant by implication operators?,12
+123,describe implication operator?,12
+124,what is implication operator in system verilog?,12
