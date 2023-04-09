@@ -1,13 +1,33 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import models.model as model
 import string
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import random
+from prettytable import from_csv
+import csv
 
-answer_data=pd.read_csv("answers.csv")
+data = {}
+
+# answer_data=pd.read_csv("answers.csv")
+# Read the CSV data into a prettytable object
+# with open('answers.csv', 'r') as f:
+#     table = from_csv(f, delimiter=',')
+# Load the CSV file into a list of dictionaries
+with open('answers.csv', 'r', encoding='utf-8-sig') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        if 'cluster' in row:
+            cluster = row['cluster']
+            if cluster not in data:
+                data[cluster] = []
+            data[cluster].append(row['answer'])
+
+answer_data = data
+#print(answer_data)
+
 nn, cluster_data = model.train_lr_model()
-val = -1
+val = 0
 
 app = Flask(__name__)
 
@@ -64,11 +84,19 @@ def get_cluster(question):
     # Select the random question
     # random_question = cluster_question[random_index]
 
-    #Select the answer
-    res_answer_data = answer_data[answer_data.cluster == val]
-    answer = res_answer_data['answer'].iloc[0]
+    # #Select the answer
+    # res_answer_data = answer_data[answer_data.cluster == val]
+    # answer = res_answer_data['answer'].iloc[0]
+    # table = from_csv(answer, delimiter=',')
+    # # Set the format options to preserve whitespace and indentation
+    # table.format = True
+    # # Generate the HTML table
+    # html_table = table.get_html_string()
+
+    answer = answer_data[str(val)]
+    answer = answer[0]
     
-    return answer
+    return jsonify({'answer': '<pre>' + answer + '</pre>'})
 
 
 # API to get suggested questions based on the last question asked

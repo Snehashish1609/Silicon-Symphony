@@ -1,5 +1,5 @@
 
-const chatGPT = new Worker('http://127.0.0.1:5500//static//chatGPT.js');
+const chatGPT = new Worker('http://127.0.0.1:5000//static//chatGPT.js');
 
 const chatGPTResp = document.querySelector(".chatGPTResponse");
 
@@ -12,7 +12,7 @@ const loadingDot3 = document.querySelector("#dot3");
 //To print the message at Starting Phase
 const message = document.querySelector('.message');
 //message.textContent = 'Hi I am a chatbot for VLSI Community.<br>I am at my infant stage';
-message.innerHTML = '..Hi I am a chatbot for VLSI Community<br>..I am at my infant stage<br>..made and maintained by Team Silicon Symphony<br>..I have miles to go before I sleep';
+message.innerHTML = '..Hi I am a Interactive platform for VLSI Community<br>..I am at my infant stage<br>..made and maintained by Team Silicon Symphony<br>..I have miles to go before I sleep';
 
 
 chatGPT.addEventListener('message', (event) => {
@@ -74,12 +74,18 @@ function sendQuery() {
 
 
     // Example array of suggested questions
-    const suggestedQuestions = [
-    "What is Silicon Symphony?",
-    "How can I get started with Silicon Symphony?",
-    "What services does Silicon Symphony offer?",
-    "How do I contact Silicon Symphony?",
-    ];
+    const suggestedQuestions = `/api/v1.0/get-suggested-ques/`;
+    const res = fetch(suggestedQuestions)
+    // data contains the fetched array
+    const firstThreeElements = res.slice(0, 4);
+
+    console.log(firstThreeElements);
+    // [
+    // "What is Silicon Symphony?",
+    // "How can I get started with Silicon Symphony?",
+    // "What services does Silicon Symphony offer?",
+    // "How do I contact Silicon Symphony?",
+    // ];
 
     // Select the suggestedQuestions div
     const suggestedQuestionsDiv = document.querySelector(".suggestedQuestions");
@@ -88,7 +94,7 @@ function sendQuery() {
     suggestedQuestionsDiv.innerHTML = "";
 
     // Loop through the array of questions and create a new HTML element for each one
-    for (let i = 0; i < suggestedQuestions.length; i++) {
+    for (let i = 0; i < 3; i++) {
     // Create a new button element
     const button = document.createElement("button");
 

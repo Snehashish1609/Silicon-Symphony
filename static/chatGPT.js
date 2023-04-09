@@ -3,7 +3,7 @@ self.addEventListener('message', (event) => {
         const words = data.split(" ");
         const salutations = ["hi", "greetings", "hello"];
         const questions = ["what", "where", "when", "who", "how", "?"];
-        const pandaquests = ["panda", "pandaquests", "cool", "blog"];
+        const pandaquests = ["bye", "good bye", "goodnight", "cool"];
         let isGreeting = false;
         let isAsking = false;
         let isPandaquests = false;
@@ -23,23 +23,24 @@ self.addEventListener('message', (event) => {
         });
     
         if (isPandaquests) {
-            const variedAnswers = [
-                "test",
-                "test2", 
-                "test3"
-            ]            
-            
-            return variedAnswers[Math.floor(Math.random() * variedAnswers.length)];
+                return `Thank You`;
+                        
         } else if (isGreeting) {
-            return `Oh, hello there. How are you?`;
+            return `Oh, hello there. How can i assist you.`;
         } else {
             const url = `/api/v1.0/get-cluster/${encodeURIComponent(data)}`;
             return fetch(url)
-                .then(response => response.text())
-                .catch(error => {
-                    console.error('Error calling API:', error);
-                    return "Sorry, I couldn't find an answer to your question.";
-                });
+            .then(response => response.json()) // parse the JSON response
+            .then(json => {
+              const answer = json.answer;
+              const returnValue = `
+                ${answer}
+              `;
+              return returnValue;
+            })
+            .catch(error => {
+              return "Sorry, I couldn't find an answer to your question.";
+            });
         }
         //return "The answer is 42";
     }   

@@ -7,7 +7,10 @@ body {
     flex: 1;
 }
 .chatGPTResponse {
-    width: 100%;
+    width: 95%;
+    display: flex;
+    white-space: pre;
+    flex-direction: column;
 }
 .bottom {
     position: fixed;
