@@ -3,11 +3,12 @@ import pandas as pd
 import string
 from sentence_transformers import SentenceTransformer
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
 import tensorflow as tf
 
 #Clearing sentences
 def train_lr_model():
-    data = pd.read_csv("assert.csv")
+    data = pd.read_csv("questions.csv")
     cluster_data=data
 
     clean_data = []
@@ -36,7 +37,7 @@ def train_lr_model():
     # Split the dataset into training and testing sets
     #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
     # Split data into training and testing sets
-    train_data, test_data, train_labels, test_labels = train_test_split(X,Y, test_size=0.1, random_state=42)
+    train_data, test_data, train_labels, test_labels = train_test_split(X,Y, test_size=0.1, random_state=56)
 
     # Train a Linear Regression model
     # lr = LogisticRegression(max_iter=1200,random_state=0)
@@ -49,18 +50,18 @@ def train_lr_model():
         tf.keras.layers.Dense(units=128, activation='relu'),
         tf.keras.layers.Dense(units=128, activation='relu'),
 
-        tf.keras.layers.Dense(units=13, activation='softmax'),
+        tf.keras.layers.Dense(units=59, activation='softmax'),
     ])
 
     #Compile the model with multi-class cross-entropy loss
     model_nn.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
 
-    #Train the model
+    # #Train the model
     model_nn.fit(train_data, tf.keras.utils.to_categorical(train_labels),epochs=50,batch_size=40)
 
     # Predict target values on the test set
-    # y_pred = lr.predict(test_data)
+    y_pred = model_nn.predict(test_data)
     
     # return model object
-    # return model_nn,cluster_data
-    return model_nn
+    # return model_nn, cluster_data
+    return model_nn, cluster_data

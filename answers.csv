@@ -1,0 +1,1388 @@
+﻿cluster,answer
+1,"Assertions are primarily used to validate the behavior of a design. 
+An assertion is a check embedded in design or bound to a design unit during the simulation.
+ Warnings or errors are generated on the failure of a specific condition or sequence of events.
+Assertions are used  to , Check the occurrence of a specific condition or sequence of events.
+Provide functional coverage.
+Assertions are used to check design rules or specifications and generate warnings or errors in case of assertion failures. An assertion also provides function coverage that makes sure a certain design specification is covered in the verification. The methodology that uses assertions is commonly known as “Assertion Based Verification” (ABV). Assertions can be written in the design as well as the verification environment.
+Example:
+By using edaplayground online platform you can perform below code.
+Below code is written for AND operation by using immediate assertions:
+Code:
+Language:System Verilog
+module tb;
+  bit a,b;
+  bit clk;
+  always #10 clk=~clk;
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  always@(posedge clk) assert(a&b);
+ endmodule
+Output:(with respect to edaplayground)[10] a=0 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 10ns, scope: tb
+# KERNEL: [30] a=0 b=1
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 30ns, scope: tb
+# KERNEL: [50] a=1 b=1
+# KERNEL: [70] a=1 b=1
+# KERNEL: [90] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 90ns, scope: tb
+# KERNEL: [110] a=1 b=1
+# KERNEL: [130] a=0 b=1
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 130ns, scope: tb
+# KERNEL: [150] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 150ns, scope: tb
+# KERNEL: [170] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 170ns, scope: tb
+# KERNEL: [190] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 190ns, scope: tb
+Final Result:Assertion will only successful for a=1 and b=1"
+2,"SystemVerilog Assertions (SVA) form an important subset of SystemVerilog, and as such may be introduced into existing Verilog and VHDL design flows.
+Assertions are primarily used to validate the behavior of a design. (""Is it working correctly?"") They may also be used to provide functional coverage information for a design (""How good is the test?""). You can add assertions to your RTL code as you write it "" these form ""active comments"" that document what you have written and what assumptions you have made. Assertions may also be used as a formal specification language, making the requirements clear and unambiguous, and making it possible to automate validation of the design against the specification.Checks design specifications and reports errors or warnings in case of failure.
+It improves debugging time. For example, a bug due to an illegal state transition can propagate to the output. Writing an assertion helps out to improve debugging time.
+Can be used in formal verification.
+Can be re-used across verification testbench or design.
+Can be parameterized
+Can be turned on/off based on the requirement.
+The behavior of a system can be written as an assertion that should be true at all times.Hence assertions are used to validate the behavior of a system defined as properties and can also be used in functional coverage.
+"
+3,"Assertions in system verilog are used to check
+ the correctness of a design ot to verify certain properties of the design.
+1)Design Validation 
+2)Debugging 
+3) Coverage Analysis 
+4)Formal Verification
+"
+4,"They are two types of assertions.
+a) Immediate assertions 
+b) Concurent assertions
+-Immediate assertions:Immediate assertions are executed like a statement in a procedural block and follow simulation event semantics.These are used to verify an immediate property during simulation----
+-Concurrent assertion:Concurrent assertions are based on clock semantic and use sampled values of their expressions.Circuit Behavior is described using System Veriog Properties that geta  evaluated everytimr on the given clcok and a failure in simulation indicates that the described functional behavior got violated"
+5,"Immediate assertions:Immediate assertions are executed like a statement in a procedural block and follow simulation event semantics.These are used to verify an Immediate property during simulation.
+Immediate assertions are procedural statements and are mainly used in simulation. An assertion is basically a statement that something must be true, similar to the if statement. The difference is that an if statement does not assert that an expression should be true, it simply checks that it is true, 
+e.g.:
+if (A == B) ... // Simply checks if A equals B
+assert (A == B); // Asserts that A equals B; if not, an error is generated
+
+If the conditional expression of the immediate assert evaluates to X, Z or 0, then the assertion fails and the simulator writes an error message.
+
+An immediate assertion may include a pass statement and/or a fail statement. In our example the pass statement is omitted, so no action is taken when the assert expression is true. If the pass statement exists:
+
+assert (A == B) $display (""OK. A equals B"");
+
+it is executed immediately after the evaluation of the assert expression. The statement associated with an else is called a fail statement and is executed if the assertion fails:
+
+assert (A == B) $display (""OK. A equals B"");
+   else $error(""It's gone wrong"");
+
+You may omit the pass statement yet still include a fail statement:
+
+assert (A == B) else $error(""It's gone wrong"");
+
+The failure of an assertion has a severity associated with it. There are three severity system tasks that can be included in the fail statement to specify the severity level: $fatal, $error (the default severity) and $warning. In addition, the system task $info indicates that the assertion failure carries no specific severity.
+
+Here are some examples:
+
+ReadCheck: assert (data == correct_data)
+      else $error(""memory read error"")
+Igt10: assert (I > 10)
+    else $warning(""I has exceeded 10"");
+
+The pass and fail statements can be any legal SystemVerilog procedural statement. They can be used, for example, to write out a message, set an error flag, increment a count of errors, or signal a failure to another part of the testbench.
+
+AeqB: assert (a == b)
+   else begin error_count++; $error(""A should equal B""); end
+Example:
+By using edaplayground online platform you can perform below code.
+Below code is written for AND operation by using immediate assertions:
+Code:
+Language:System Verilog
+module tb;
+  bit a,b;
+  bit clk;
+  always #10 clk=~clk;
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  always@(posedge clk) assert(a&b);
+ endmodule
+Output:(with respect to edaplayground)[10] a=0 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 10ns, scope: tb
+# KERNEL: [30] a=0 b=1
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 30ns, scope: tb
+# KERNEL: [50] a=1 b=1
+# KERNEL: [70] a=1 b=1
+# KERNEL: [90] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 90ns, scope: tb
+# KERNEL: [110] a=1 b=1
+# KERNEL: [130] a=0 b=1
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 130ns, scope: tb
+# KERNEL: [150] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 150ns, scope: tb
+# KERNEL: [170] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 170ns, scope: tb
+# KERNEL: [190] a=1 b=0
+# ASSERT: Error: ASRT_0301 testbench.sv(17): Immediate assert condition (a&b) FAILED at time: 190ns, scope: tb
+Final Result:Assertion will only successful for a=1 and b=1
+  "
+6,"Concurent assertions:An assertion that checks the sequence of events spread over multiple clock cycles is called a concurrent assertion. They execute in parallel with other always blocks concurrently, hence it is known as a concurrent assertion.
+Unlike immediate assertion, the concurrent assertion is evaluated only at clock tick. Thus, it is a clock-based evaluation model and an expression used in the concurrent assertion is always tied to a clock definition.
+The variables used in the assertions are sampled in the preponed region of the simulation time slot but it is evaluated at the observe region and execute pass/fail statements in the reactive region.
+A concurrent assertion can be declared in an always or initial block and that can be placed in an interface, program, or module block.
+An assert keyword is used to check the property.
+Syntax:
+<label>: assert property (<property_name(signals)>) <pass_statement> else <fail_statement>;
+Example:
+The behavior of a design may be specified using statements similar to these:
+
+""The Read and Write signals should never be asserted together.""
+
+""A Request should be followed by an Acknowledge occurring no more than two clocks after the Request is asserted.""
+
+Concurrent assertions are used to check behavior such as this. These are statements that assert that specified properties must be true. For example,
+
+assert property ( !(Read && Write) );
+
+asserts that the expression Read && Write is never true at any point during simulation.
+
+Properties are often built using sequences. For example,
+
+assert property ( @(posedge Clock) Req |-> ##[1:2] Ack);
+
+where Req is a simple sequence (it""s just a boolean expression) and ##[1:2] Ack is a more complex sequence expression, meaning that Ack is true on the next clock, or on the one following (or both). |-> is the implication operator, so this assertion checks that whenever Req is asserted, Ack must be asserted on the next clock, or the following clock.
+
+Concurrent assertions like these are checked throughout simulation. They usually appear outside any initial or always blocks in modules, interfaces and programs. (Concurrent assertions may also be used as statements in initial or always blocks. A concurrent assertion in an initial block is only tested on the first clock tick.)
+
+The first assertion example above does not contain a clock. Therefore it is checked at every point in the simulation. The second assertion is only checked when a rising clock edge has occurred; the values of Req and Ack are sampled on the rising edge of Clock.
+
+Example:
+By using edaplayground online platform you can perform below code.
+Below code is written for AND operation by using immediate assertions:
+Code:
+// Code your testbench here
+// or browse Examples
+module tb;
+  bit a,b;
+  bit clk;
+  
+  always #10 clk=~clk;
+  
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  
+  assert property(@(posedge clk) a|b); 
+ endmodule
+  
+Language:System Verilog
+Output:
+KERNEL: ASDB file was created in location /home/runner/dataset.asdb
+# KERNEL: [10] a=0 b=0
+# ASSERT: Error: ASRT_0005 testbench.sv(20): Assertion FAILED at time: 10ns, scope: tb, start-time: 10ns
+# KERNEL: [30] a=0 b=1
+# KERNEL: [50] a=1 b=1
+# KERNEL: [70] a=1 b=1
+# KERNEL: [90] a=1 b=0
+# KERNEL: [110] a=1 b=1
+# KERNEL: [130] a=0 b=1
+# KERNEL: [150] a=1 b=0
+# KERNEL: [170] a=1 b=0
+# KERNEL: [190] a=1 b=0
+# RUNTIME: Info: RUNTIME_0068 testbench.sv (17): $finish called.
+Final Result:Assertion fails at one condition a=0,b=0;Because according assertion behaviour with or operator it is neccesary the signal must be asserted high at once.
+"
+7,"Property in assertion:Property in assertion
+The property keyword is to capture design specifications that span over time. It also contains a sequence of events. It distinguishes a concurrent assertion from an immediate assertion.
+Syntax:
+property <property_name>;
+  <expression or sequence>
+endproperty 
+Property declaration:A property can be declared in a module, clocking block, package or interface, etc.
+A property can have formal arguments. 
+Property Usage:The property captures design specifications and checks for design behavior.
+It can be used as an assumption in the verification environment.
+It is also used for coverage to measure that property is covered.
+If assertion has simple property, then usually it is written as a part of the assert statement.
+ Example:assert property (@(posedge clk) (req1 || req2));
+assert property (prop_req);
+property prop_req;
+  @(posedge clk) disable iff (!reset_n)
+  req1 |=> req2 ##2 req3;
+endproperty"
+8,"Sequence in assertions:
+A sequence is a list of boolean expressions in a linear order of increasing time. The sequence is true over time if the boolean expressions are true at the specific clock ticks. The expressions used in sequences are interpreted in the same way as the condition of a procedural if statement.
+Boolean expression events that evaluate over a period of time involving single/multiple clock cycles. SVA provides a keyword to represent these events called “sequence”.
+Example:In the below example the sequence seq_1 checks that the signal “a” is high on every positive edge of the clock. If the signal “a” is not high on any positive clock edge, the assertion will fail.
+sequence seq_1;
+  @(posedge clk) a==1;
+endsequence
+Example:
+By using edaplayground online platform you can perform below code.
+Below code is written for AND operation by using immediate assertions:
+Code:
+Language:System Verilog
+module asertion_ex;
+  bit clk,a;
+  
+  always #5 clk = ~clk; //clock generation
+  
+  //generating 'a'
+  initial begin 
+    a=1;
+    #15 a=0;
+    #10 a=1;
+    #10 a=0;
+    #10 a=1;
+    #10;
+    $finish;
+  end
+  
+  //assertion sequence
+  sequence seq_1;
+   @(posedge clk) a==1;
+  endsequence
+  
+  //calling assert property
+  a_1: assert property(seq_1);
+    
+  //wave dump
+  initial begin 
+    $dumpfile(""dump.vcd""); $dumpvars;
+  end
+endmodule
+Output:ASDB file was created in location /home/runner/dataset.asdb
+# ASSERT: Error: ASRT_0005 testbench.sv(26): Assertion ""a_1"" FAILED at time: 25ns, scope: asertion_ex, start-time: 25ns
+# ASSERT: Error: ASRT_0005 testbench.sv(26): Assertion ""a_1"" FAILED at time: 45ns, scope: asertion_ex, start-time: 45ns
+# RUNTIME: Info: RUNTIME_0068 testbench.sv (17): $finish called.
+A sequence with a logical relationship
+Below sequence, seq_2 checks that on every positive edge of the clock, either signal “a” or signal “b” is high. If both the signals are low, the assertion will fail.
+
+sequence seq_2;
+  @(posedge clk) a || b;
+endsequence
+Sequence Expressions
+By defining arguments in a sequence definition, the same sequence can be re-used for similar behavior.
+
+For example, we can define a sequence as below.
+
+sequence seq_lib (a, b)
+  a || b ;
+endsequence
+this seq can be used as,sequence s_lib_inst
+  seq_lib(req1,req2);
+endsequence
+Sequences with timing relationship
+In SVA, clock cycle delays are represented by a “##” sign. For example, ##2 means 2 clock cycles.
+
+Below sequence checks for the signal “a” being high on a given positive edge of the clock. If the signal “a” is not high, then the sequence fails. If signal “a” is high on any given positive edge of the clock, the signal “b” should be high 2 clock cycles after that. If signal “b” is not asserted after 2 clock cycles, the assertion fails.
+
+sequence seq;
+  @(posedge clk) a ##2 b;
+endsequence
+"
+9,"Empty Sequence : An empty sequence is one that does not match over any positive number of clock ticks. The following rules apply for concatenating sequences with empty sequences. An empty sequence is denoted as empty, and a sequence is denoted as seq.
+(empty ##0 seq) does not result in a match.
+(seq ##0 empty) does not result in a match.
+(empty ##n seq), where n is greater than 0, is equivalent to (##(n-1) seq).
+(seq ##n empty), where n is greater than 0, is equivalent to (seq ##(n-1) 'true).
+Empty Sequenc [*0]:A repetition of 0 times indiactes that the resulatnt is empty
+Usage rules:
+*Neither (e##0 s) nor (s##0 e) matches any sequence.
+*(e ##n s) is equivalent to (##(n-1)s),if n>0 
+*(s ##n e) is equivalent to (s##(n-1) `true),if n>0 
+"
+10,"Assertion severity levels
+$info: indicates that the assertion failure carries no specific severity.
+$warning: run-time warning, which can be suppressed in a tool-specific manner.
+$fatal: run-time fatal
+$error: run-time error(default)
+Example:
+always @(posedge clk)
+begin
+assert(output==expected) count++;
+else begin
+       $error(""output is incorrect"");
+        ercount++;
+  end
+end"
+11,"Clock Resolution in Assertions:
+A clock tick is an atomic moment in time and a clock ticks only once at any simulation time. The clock can actually be a single signal, a gated clock (e.g. (clk && GatingSig)) or other more complex expression. When monitoring asynchronous signals, a simulation time step corresponds to a clock tick.
+
+The clock for a property can be specified in several ways, of which the most common are:
+
+The clock is explicitly specified in the property:
+property p;
+  @(posedge clk) a ##1 b;
+endproperty
+assert property (p);
+The clock is explicitly specified in the concurrent assertion:
+assert property (@(posedge clk) a ##1 b);
+The clock is inferred from a procedural block:
+property p;
+  a ##1 b;
+endproperty
+always @(posedge clk) assert property (p);
+The clock can be specified for properties in several ways.
+Rules: The clock for an assertion is determined based on the priority mentioned below.
+
+Priority 1: Use the explicitly mentioned clock for the assertion.
+Priority 2: Infer clock from code context where it is used.
+
+Priority 3: Use default specified clock.
+
+Note: It is mandatory to mention the clock in case of concurrent assertion. If a clock is not used, statements are considered to be illegal.
+Ways to specify the clock
+Property has a clock defined
+sequence seqA
+  req1 ##3 req2;
+endsequence
+
+property prop;
+  @(posedge clk) seqA;
+endproperty
+
+assert property (prop
+
+
+Sequence has a clock defined
+sequence seqA
+  @(posedge clk) req1 ##3 req2;
+endsequence
+
+property prop;
+  seqA;
+endproperty
+
+assert property (prop);
+
+nfer clock from clocking block
+clocking CB @(posedge clk);
+  property prop;
+    req1 ##3 req2;
+  endproperty
+endclocking
+
+assert property (CB.prop);
+Infer clock from procedural block
+property prop;
+  req1 ##3 req2;
+endproperty
+
+always @(posedge clk) assert property (prop);
+Example:
+
+  module clock_resolve_assertion();
+   logic clk = 0;
+   logic req,gnt;
+   //=================================================
+   // Clock inside a sequence 
+  //=================================================
+ sequence req_gnt_seq;
+  @ (posedge clk)
+        req  ##1  gnt;
+ endsequence
+ //=================================================
+  // Clock inside a property
+  //=================================================
+  property req_gnt_prop;
+    @ (posedge clk)
+        req |=> gnt;
+  endproperty
+  //=================================================
+  // Clock infered from a always block
+  //=================================================
+  always @ (posedge clk)
+  begin
+     gnt <= req;
+     //==============================================
+     // Here clock is infered to be posedge clk
+     //==============================================
+     req_gnt_assert : assert property (req  |=> gnt);
+  end
+  //=================================================
+  // Default clocking
+  //=================================================
+  default clocking aclk @ (posedge clk);
+    input req;
+    input gnt;
+  endclocking
+  
+  property req_gnt_default_prop;
+     req |->  ##1  gnt;
+  endproperty
+  //=================================================
+  // clocking clocking
+  //=================================================
+  clocking reqclk @ (posedge clk);
+    input req;
+    input gnt;
+  endclocking
+
+ property req_gnt_clocking_prop;
+     reqclk.req |->  ##1  reqclk.gnt;
+ endproperty
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  // Now call all the assertion in one go
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  a1  : assert property (req_gnt_prop);
+  a2  : assert property (req_gnt_default_prop);
+  a3  : assert property (req_gnt_clocking_prop);
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  //  Assertion testing code
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  always  #1  clk ++;
+  
+  initial begin
+    $monitor(""Req %b Gnt %b"",req,gnt);
+    req <= 0; gnt <= 0;
+    // Make the assertion pass
+     ##1  req  <= 1;
+     ##20 ;
+    req <= 0;
+     #10  $finish;
+  end
+  
+ endmodule
+Output:
+# KERNEL: Req 0 Gnt 0
+# KERNEL: Req 1 Gnt 0
+# KERNEL: Req 1 Gnt 1
+# KERNEL: Req 0 Gnt 1
+# KERNEL: Req 0 Gnt 0"
+12,"Implication Operators:
+The implication construct (|->) allows a user to monitor sequences based on satisfying some criteria, e.g. attach a precondition to a sequence and evaluate the sequence only if the condition is successful. The left-hand side operand of the implication is called the antecedent sequence expression, while the right-hand side is called the consequent sequence expression.
+
+If there is no match of the antecedent sequence expression, implication succeeds vacuously by returning true. If there is a match, for each successful match of the antecedent sequence expression, the consequent sequence expression is separately evaluated, beginning at the end point of the match.
+
+There are two forms of implication: overlapped using operator |->, and non-overlapped using operator |=>.
+
+For overlapped implication, if there is a match for the antecedent sequence expression, then the first element of the consequent sequence expression is evaluated on the same clock tick.
+
+s1 |-> s2;
+
+In the example above, if the sequence s1 matches, then sequence s2 must also match. If sequence s1 does not match, then the result is true.
+
+For non-overlapped implication, the first element of the consequent sequence expression is evaluated on the next clock tick.
+
+s1 |=> s2;
+
+The expression above is basically equivalent to:
+
+""define true 1
+s1 ##1 ""true |-> s2;
+
+where `true is a boolean expression, used for visual clarity, that always evaluates to true.
+
+The implication operator does a property check conditionally if the sequential antecedent is matched.
+Syntax:
+
+sequence_exp |-> property_exp
+sequence_exp |=> property_exp
+The LHS operand sequence_exp is called an antecedent
+
+The RHS operand property_exp is called a consequent.
+Type of Implication
+Overlapped implication
+Non-overlapped implication
+Overlapped implication
+The overlapped implication operator is denoted by the |-> symbol.
+
+The evaluation of the consequent starts immediately on the same clock cycle if the antecedent holds true.
+
+The consequent is not evaluated if the antecedent is not true.
+
+Example:property prop;
+  @(posedge clk) valid |-> (a ##3 b);
+endproperty
+
+
+
+Non-overlapped implication
+The overlapped implication operator is denoted by the |=> symbol.
+
+The evaluation of the consequent starts in the next clock cycle if the antecedent holds true.
+
+The consequent is not evaluated if the antecedent is not true.
+
+Example:
+property prop;
+  @(posedge clk) valid |=> (a ##3 b);
+endproperty"
+13,"Overlapped Implication Operator:
+The overlapped implication operator is denoted by the |-> symbol.
+
+The evaluation of the consequent starts immediately on the same clock cycle if the antecedent holds true.
+
+The consequent is not evaluated if the antecedent is not true.
+
+Example:
+
+property prop;
+  @(posedge clk) valid |-> (a ##3 b);
+endproperty
+
+
+Example:
+By using edaplayground online platform you can perform below code.
+Below code is written for AND operation by using immediate assertions:
+Code:
+Language:System Verilog
+module asertion_ex;
+  bit clk,a,b;
+  
+  always #5 clk = ~clk; //clock generation
+  
+  //generating 'a'
+  initial begin 
+        a=1; b=1;
+    #15 a=0; b=0;
+    #10 a=1; b=0;
+    #10 a=0; b=0;
+    #10 a=1; b=1;
+    #10;
+    $finish;
+  end
+  
+  property p;
+    @(posedge clk) a |-> b;
+  endproperty
+  
+  //calling assert property
+  a_1: assert property(p);
+    
+  //wave dump
+  initial begin 
+    $dumpfile(""dump.vcd""); $dumpvars;
+  end
+endmodule
+Output:
+KERNEL: ASDB file was created in location /home/runner/dataset.asdb
+# ASSERT: Error: ASRT_0005 testbench.sv(25): Assertion ""a_1"" FAILED at time: 35ns, scope: asertion_ex, start-time: 35ns
+# RUNTIME: Info: RUNTIME_0068 testbench.sv (17): $finish called.
+Output waveform is given  above.
+"
+14,"Non-Overlapped Implication Operator:
+
+The overlapped implication operator is denoted by the |=> symbol.
+
+The evaluation of the consequent starts in the next clock cycle if the antecedent holds true.
+
+The consequent is not evaluated if the antecedent is not true.
+
+Example:
+property prop;
+  @(posedge clk) valid |=> (a ##3 b);
+endproperty
+
+
+
+Example:
+By using edaplayground online platform you can perform below code.
+Below code is written for AND operation by using immediate assertions:
+Code:
+Language:System Verilog
+module asertion_ex;
+  bit clk,a,b;
+  
+  always #5 clk = ~clk; //clock generation
+  
+  //generating 'a'
+  initial begin 
+        a=1; b=1;
+    #15 a=0; b=0;
+    #10 a=1; b=0;
+    #10 a=0; b=0;
+    #10 a=1; b=1;
+    #10;
+    $finish;
+  end
+  
+  property p;
+    @(posedge clk) a |=> b;
+  endproperty
+  
+  //calling assert property
+  a_1: assert property(p);
+    
+  //wave dump
+  initial begin 
+    $dumpfile(""dump.vcd""); $dumpvars;
+  end
+endmodule
+
+output:
+# KERNEL: ASDB file was created in location /home/runner/dataset.asdb
+# ASSERT: Error: ASRT_0005 testbench.sv(25): Assertion ""a_1"" FAILED at time: 25ns, scope: asertion_ex, start-time: 15ns
+# ASSERT: Error: ASRT_0005 testbench.sv(25): Assertion ""a_1"" FAILED at time: 45ns, scope: asertion_ex, start-time: 35ns
+# RUNTIME: Info: RUNTIME_0068 testbench.sv (17): $finish called.
+Output waveform is given above"
+15,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+module imm_and;
+  bit a,b;
+  bit clk;
+  
+  always #10 clk=~clk;
+  
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  
+  always @(posedge clk) assert(a&b);
+    endmodule
+Link for execution:https://edaplayground.com/x/WigF"
+16,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+module imm_or;
+  bit a,b;
+  bit clk;
+  
+  always #10 clk=~clk;
+  
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  
+  always @(posedge clk) assert(a|b);
+    endmodule
+Link for execution:https://edaplayground.com/x/uKqg"
+17,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+module con_and;
+  bit a,b;
+  bit clk;
+  
+  always #10 clk=~clk;
+  
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  
+  assert property(@(posedge clk) a&b);
+ endmodule
+Link For Execution:https://edaplayground.com/x/EXKf"
+18,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+module con_or;
+  bit a,b;
+  bit clk;
+  
+  always #10 clk=~clk;
+  
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  
+  assert property(@(posedge clk) a|b);
+ endmodule
+Link For Execution:https://edaplayground.com/x/tFGv  "
+19,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+module assertion_example;
+  bit a,b;
+  bit clk;
+  
+  always #10 clk=~clk;
+  
+  initial begin
+    for(int i=0;i<10;i++)
+      begin
+        @(posedge clk);
+        a<=$random;
+        b<=$random;
+        $display(""[%0t] a=%b b=%b"",$time,a,b);
+      end
+    #10 $finish;
+  end
+  
+  always @(posedge clk) assert(a|b);
+    endmodule
+Link for Execution:https://edaplayground.com/x/LTtv"
+20,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+  module clock_resolve_assertion();
+   logic clk = 0;
+   logic req,gnt;
+   //=================================================
+   // Clock inside a sequence 
+  //=================================================
+ sequence req_gnt_seq;
+  @ (posedge clk)
+        req  ##1  gnt;
+ endsequence
+ //=================================================
+  // Clock inside a property
+  //=================================================
+  property req_gnt_prop;
+    @ (posedge clk)
+        req |=> gnt;
+  endproperty
+  //=================================================
+  // Clock infered from a always block
+  //=================================================
+  always @ (posedge clk)
+  begin
+     gnt <= req;
+     //==============================================
+     // Here clock is infered to be posedge clk
+     //==============================================
+     req_gnt_assert : assert property (req  |=> gnt);
+  end
+  //=================================================
+  // Default clocking
+  //=================================================
+  default clocking aclk @ (posedge clk);
+    input req;
+    input gnt;
+  endclocking
+  
+  property req_gnt_default_prop;
+     req |->  ##1  gnt;
+  endproperty
+  //=================================================
+  // clocking clocking
+  //=================================================
+  clocking reqclk @ (posedge clk);
+    input req;
+    input gnt;
+  endclocking
+
+ property req_gnt_clocking_prop;
+     reqclk.req |->  ##1  reqclk.gnt;
+ endproperty
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  // Now call all the assertion in one go
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  a1  : assert property (req_gnt_prop);
+  a2  : assert property (req_gnt_default_prop);
+  a3  : assert property (req_gnt_clocking_prop);
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  //  Assertion testing code
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  always  #1  clk ++;
+  
+  initial begin
+    $monitor(""Req %b Gnt %b"",req,gnt);
+    req <= 0; gnt <= 0;
+    // Make the assertion pass
+     ##1  req  <= 1;
+     ##20 ;
+    req <= 0;
+     #10  $finish;
+  end
+ 
+  module clock_resolve_assertion();
+   logic clk = 0;
+   logic req,gnt;
+   //=================================================
+   // Clock inside a sequence 
+  //=================================================
+ sequence req_gnt_seq;
+  @ (posedge clk)
+        req  ##1  gnt;
+ endsequence
+ //=================================================
+  // Clock inside a property
+  //=================================================
+  property req_gnt_prop;
+    @ (posedge clk)
+        req |=> gnt;
+  endproperty
+  //=================================================
+  // Clock infered from a always block
+  //=================================================
+  always @ (posedge clk)
+  begin
+     gnt <= req;
+     //==============================================
+     // Here clock is infered to be posedge clk
+     //==============================================
+     req_gnt_assert : assert property (req  |=> gnt);
+  end
+  //=================================================
+  // Default clocking
+  //=================================================
+  default clocking aclk @ (posedge clk);
+    input req;
+    input gnt;
+  endclocking
+  
+  property req_gnt_default_prop;
+     req |->  ##1  gnt;
+  endproperty
+  //=================================================
+  // clocking clocking
+  //=================================================
+  clocking reqclk @ (posedge clk);
+    input req;
+    input gnt;
+  endclocking
+
+ property req_gnt_clocking_prop;
+     reqclk.req |->  ##1  reqclk.gnt;
+ endproperty
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  // Now call all the assertion in one go
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  a1  : assert property (req_gnt_prop);
+  a2  : assert property (req_gnt_default_prop);
+  a3  : assert property (req_gnt_clocking_prop);
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  //  Assertion testing code
+  //+++++++++++++++++++++++++++++++++++++++++++++++++
+  always  #1  clk ++;
+  
+  initial begin
+    $monitor(""Req %b Gnt %b"",req,gnt);
+    req <= 0; gnt <= 0;
+    // Make the assertion pass
+     ##1  req  <= 1;
+     ##20 ;
+    req <= 0;
+     #10  $finish;
+  end
+  
+ endmodule
+Link for execution:https://edaplayground.com/x/98Xp"
+21,"A sequence repetition operator indicates that the sequence occurs a number of times. The number of times the sequence repeats is always a non-negative number (i.e. zero or positive number) and can be specified either as a fixed number or a range. If it is a range, then the maximum limit of the range can also be specified as '$', which indicates a finite but unbounded maximum.There are three types of repetition operators.
+a)Consecutive Repetition Operator
+b)Goto Repetition Operator
+c)Non-consecutive Repetition Operator
+The last two of these operators actually work on boolean expressions rather than on sequences.
+The min value can be less then 0 and max value as sees in earlier page is $.
+Example:
+property p;
+  @(posedge clk) a |-> ##1 b ##1 b ##1 b;
+endproperty
+a: assert property(p);
+The above property checks that, if the signal “a” is high on given posedge of the clock, the signal “b” should be high for 3 consecutive clock cycles.
+with repetition operator above sequence can be re-written as,
+property p;
+  @(posedge clk) a |-> ##1 b[*3];
+endproperty
+a: assert property(p);
+----------------------------------------------------------------------------------------------------------------------------------------------------
+If the sequence of events happens repeatedly for n times and it is represented as [*n] where “n” > 0 and “n” cannot be $.
+Example 
+The repetition operator can also be used in a certain range using [*m:n] where both “m” and “n” > 0 and n can not be $.
+sequence seq;
+  @(posedge clk) req1 ##1 req2[*2:4];
+endsequence
+In this example, if req1 is true then after 1 clock cycle, req2 must be true for a minimum of 2 and a maximum of 4 consecutive clock cycles.
+req1 ##1 req2[*2:4] is same as
+req1 ##1 req2 ##1 req2 or
+req1 ##1 req2 ##1 req2 ##1 req2 or 
+req1 ##1 req2 ##1 req2 ##1 req2 ##1 req2;
+"
+22,"There are 3 types of repetition operators in assertion:
+1.Non-consecutive repetitive operator
+2.Go to repetitive operator
+3.Consecutive repetitive operator"
+23,"Non-Consecutive Repetition Operator:Nonconsecutive repetition specifies finitely many iterative matches of the operand boolean expression, with a delay of one or more clock ticks from one match of the operand to the next successive match and no match of the operand strictly in between.
+This is very similar to “go to” repetition except that it does not require the last match on the signal repetition to happen in the clock cycle before the end the entire sequence match.
+Property non_consecutive_repeatation_p check, when the positive edge of signal “a” is detected, check for signal “b” to be high continuously or intermittently for 3 clock cycles, followed by signal “c “ to be high in any cycle after that while signal “b” remains low.
+Syntax:
+Signal_name1 [=n] ##1 signal_name2
+Examples:
+property goto;
+   @(posedge clk)$rose(a)|->b[=3]##1c;
+endproperty
+---------------------------------------------
+***Non-Consecutive repetition operator[=n]
+@(posedge clk) $rose(a) |=>##1(b[=2])##1c;
+*If  there is a rise in a at posedge ,then after two cycles,this checker will make sure that b is high for atleast two clock cycles before c becoming high
+*No restriction on number of cycles between b and c
+***Non-Consecutive repetition operator[=min:max]
+@(posedge clk) $rose(a) |=>##1(b[=2:4])##1c;
+*If  there is a rise in a at posedge ,then after two cycles,this checker will make sure that b is high for two clock  to four cycles before c becoming high
+*No restriction on number of cycles between b and c"
+24,"The go-to repetition operator is used to specify that a signal will match the number of times specified not necessarily on continuous clock cycles.
+Syntax:
+                     signal [->n]
+Example:
+property p;
+  @(posedge clk) a |-> ##1 b[->3] ##1 c;
+endproperty
+a: assert property(p);
+The above property checks that, if the signal “a” is high on given posedge of the clock, the signal “b” should be high for 3 clock cycles followed by “c” should be high after” b” is high for the third time."
+25,"The binary and operator are used when two sequence operands are expected to match, but the end time of both operand sequences can be different
+Syntax:
+       <seq_exp> and <seq_exp>
+The requirement for and operation match
+1.Both operand sequences should start at the same time.
+2.Both operands must match. In case one operand matches, it waits for another operand to match.
+3.The end time of the resultant or composite sequence is the end time of the operand that finishes last.
+Example for AND of two sequences
+(a1 ##1 a2) and (a3 ##1 a4 ##2 a5)
+Explanation
+Let’s consider a1 ##1 a2 as operand A and a3 ##1 a4 ##2 a5 as operand B.
+a1 ##1 a2 (Operand A): The a1 evaluates to true followed by a2 one clock tick matches at clock tick 7
+a3 ##1 a4 ##2 a5 (operand B): The operand a3 evaluates to true followed by a4 one clock tick later, followed by a5 two clock ticks later i.e., at clock tick 9.
+(a1 ##1 a2) and (a3 ##1 a4 ##2 a5): The resultant sequence is said to be matched when both above operand sequence matches. The end times of matches for individual operand sequences A and B are clock ticks 7 and 9 respectively.
+The resultant sequence match should follow the conditions like individual operand sequences should start at the same clock tick (clock tick 6) and the end time of the last finishing operand sequence will be the end time of the resultant sequence (clock tick 9).
+An important point to note here: The two operand sequences need not be matched at the same number of clock ticks.
+
+"
+26,"The binary intersect operator is used when two sequence operands are expected to match, and the end time of both operand sequences must be the same
+Syntax:
+      <seq_exp> intersect <seq_exp>
+The requirement for intersect operation match
+1.Both operand sequence lengths must be the same.
+2.Both operands must match. In case one operand matches, it waits for another operand to match.
+3.The end time of the resultant or composite sequence is equal to the end time of the matched operand sequences
+Example for Intersection of two sequences
+(a1 ##[1:4] a2) intersect (a3 ##1 a4 ##2 a5)
+Explanation
+a1 ##[1:4] a2: The first operand a1 evaluates to true followed by a2 which evaluates to true for 1,2,3, or 4 clock ticks later. So, sequence matches at clock ticks 7,8,9, and 10 respectively.
+a3 ##1 a4 ##2 a5: The operand a3 evaluates to true followed by a4 one clock tick later, followed by a5 two clock ticks later i.e., at clock tick 9.
+(a1 ##1 a2) intersect (a3 ##1 a4 ##2 a5): The resultant sequence is matched at clock tick 9 as both of individual operand sequence has matched.
+"
+56,An expect statement works in a procedural way like a single thread that unblocks after property evaluation (does not matter success or fail) whereas assert works concurrently like a separate thread and behaves in a non-blocking manner.
+55,"The assertion can be written as a part of the design code. A designer or verification engineer can plan for adding an assertion. It is not a flexible and recommended way to have assertions in the design files since designers do want to change their code by the verification team. System Verilog provides flexibility to write assertions in separate files in the testbench and then bind the same design file.
+The ‘bind’ directive allows binding assertions with
+1.	Design module
+2.	Interface 
+Binding is possible with
+1.	A specific instance of a module or interface
+2.	All instances of a module or interface  Syntax:
+To bind with specific instance:
+              bind <dut_specific_instance_path> <assertion_module> <instance>  To bind with all instances:
+              bind <dut_module> <assertion_module> <instance>"
+54,"The cover statement is used to gather coverage information for the specified sequences or properties 
+Syntax:
+       cover property (<sequence>) <statement_or_null>
+Cover statement example:
+cover_prop: cover property (pro) $display (""The pro property executed"");
+property pro;
+  req1 |=> req2
+endproperty+B5"
+53,"The assume statement allows properties to be considered as assumptions for dynamic simulation tools and formal analysis.For a simulation environment, assume the statement is the same as an assert statement that checks assumed property and reports success or failure.For formal analysis, an assumed proper+B5ty can be considered as a hypothesis to prove asserted property without having any bound. 
+  Syntax:
+       <assume_label>: assume <property>
+Assume statement example:
+assume_a2: assume property (pro);
+property pro;
+  @ (posedge clk) req1 ##4 req2;
+endproperty
+//is same as
+assume_a1: assume property (@ (posedge clk) req1 ##4 req2);
+"
+52,"The expect statement is a procedural blocking statement that is like an assert statement and used to block the execution until the property is evaluated. 
+ Syntax:
+              expect (property or sequence) <statements> Usage: To execute some procedural code after a series of sequences.
+Note: The “expect” statement does not infer the clock from its procedural block, it must be explicitly specified in the sequence/ property or within the expect statement.
+
+Example 1: clock specified within the expect statement
+initial begin
+  #100;
+  expect (@ (posedge clk) req1 ##2 req2) else $error ""expect failure"");
+  <statement>;
+End
+
+After 100-time units, whenever posedge of a clock happens, req1 is true, followed by 2 clock cycles, req2 is true to pass the expect statement (otherwise, it fails), and then only <statement> can be executed."
+51,"$asserton () is by default set that keeps assertion enabled by default. The $asserton can also be called after assertoff () or $assertkill () to enable assertion once again. 
+Syntax:
+      $asserton (level, <list of modules/ instance/ assertion_identifier>); 
+ where, the level represents up to what level of hierarchy from module or instance assertion can be turned on/ off.assertion _identifier represents a label used with assert or property.
+level = 0: This turns on/off assertions at all levels below the current instance or module.
+level = n: This turns on/off assertions at ‘n’ hierarchical levels below the current instance or module. 
+ Example: Generally, assertions are turned off when reset is asserted as shown below.
+module control_assertion ();
+  Initial begin
+    @(posedge rst) $assertoff (0, tb_top.DUT); // To disable assertion for all levels on active high reset
+    @(negedge rst) $asserton (0, tb_top.DUT);  // To enable assertion for all levels on active high reset
+  end
+endmodule
+"
+50,"$assertkill () – It is used to kill currently executing assertions.  
+Syntax:
+      $assertkill (level, <list of modules/ instance/ assertion_identifier>);
+where, the level represents up to what level of hierarchy from module or instance assertion can be turned on/ off.
+“assertion _identifier” represents a label used with assert or property.
+level = 0: This turns on/off assertions at all levels below the current instance or module
+level = n: This turns on/off assertions at ‘n’ hierarchical levels below the current instance or module.
+
+Example: Generally, assertions are turned off when reset is asserted as shown below.
+module control_assertion ();
+  Initial begin
+    @(posedge rst) $assertkill(0, tb_top.DUT); // To disable assertion for all levels on active high reset
+    @(negedge rst) $asserton(0, tb_top.DUT);  // To enable assertion for all levels on active high reset
+  end
+endmodule
+
+"
+49,"$assertoff () – It is used to turn off assertions temporarily at the module or instance level.
+Syntax:
+      $assertoff (level, <list of modules/ instance/ assertion_identifier>);
+where, the level represents up to what level of hierarchy from module or instance assertion can be turned on/ off.
+assertion _identifier represents a label used with assert or property.
+level = 0: This turns on/off assertions at all levels below the current instance or module.
+level = n: This turns on/off assertions at ‘n’ hierarchical levels below the current instance or module.
+
+Example: Generally, assertions are turned off when reset is asserted as shown below.
+module control_assertion ();
+  Initial begin
+    @(posedge rst) $assertoff(0, tb_top.DUT); // To disable assertion for all levels on active high reset
+    @(negedge rst) $asserton(0, tb_top.DUT);  // To enable assertion for all levels on active high reset
+  end
+endmodule"
+48,"The $countones returns the count of ones in an expression.
+Syntax:
+             $countones(<expression>)
+Example: For an error in the transaction, the data [3:0] signal value is expected to be 4‘hF. Below assertion checks all bit sets in case, an error is detected.
+property pro;
+  @posedge(clk) (valid & error) |-> ($countones(data) == 4);
+endproperty
+Note: countones do not count x or z values in an expression."
+47,"The $isunknown returns true if any bit of an expression or signal is x or z.
+Syntax:
+            $isunknown(<expression>)
+Example: When en bit is set, addr and data signal should not have x or z value.
+property prop;
+  @posedge(clk) en|-> not($isunknown({data, addr}));
+endproperty
+"
+46,"The $onehot0 returns true if at most one bit of an expression/ single is high (i.e., all bits are 0 or at least one bit is 1) otherwise for an expression/signal that has x or z value, $onehot0 will fail.
+Syntax:
+             $onehot0(<expression>)"
+45,"The $onehot returns true if a single bit of an expression/ single is high, otherwise for an expression/ signal has x or z value, $onehot will fail.
+Syntax:
+                $onehot(<expression>)
+Design requirement:
+To read data from SRAM, there can be multiple requests from various sources. There can be only one done signal along with a ready signal.
+property pro;
+  @posedge(clk) disable iff (rst) ready |-> $onehot(done)
+endproperty
+
+Whenever ready is high at the same cycle, the done signal should have at least one bit to be high.
+"
+44,"1)   $onehot(expression) : checks that only one bit of the expression can be high on any given clock edge.
+2)  $onehot0(expression):  checks only one bit of the expression can be high or none of the bits can be high on any given clock edge.
+3)  $isunknown(expression): checks if any bit of the expression is X or Z.
+4)  $countones(expression): counts the number of bits that are high in a vector.
+"
+43,"The $past() function is used to sample/ return the value of an expression or signal for the given number of clock cycles in the past
+Syntax:
+$past(<expression>, <number_of_cycles>, <gating_expression>, <clock_event>);
+1) The default value for the number of clock cycles is 1 if not specified.
+2) The gating expression is an optional expression for the clocking event.
+3) A clocking event is also an optional event. It will infer an assertion or property clocking event if it is not specified.
+Design specification
+For a request, ready should be asserted after 3 clock cycles. In another way, req should be set 3 clock cycles before ready is asserted.
+                               property prop;
+                                     $rose(ready) |->  $past(req, 3);
+                               endproperty
+
+Example in procedural block
+The previous cycle value of the req signal is used in the below example.
+                             always @(posedge clk) begin
+                                    out <= ack & $past(req);
+                              end
+"
+42,"If there is no change in the value of an expression from the previous clocking event value than the $stable function returns true, otherwise returns false.
+Syntax:
+$stable (expression, <clocking_event>)
+Example: When valid is set, associated data is expected to be true.
+property prop;
+  valid |-> $stable(wdata);
+endproperty
+
+Example in procedural block
+always @(posedge clk) begin
+  if(!($stable(data) && valid)) $display(""data is not stable when valid is high"");
+end"
+41,"If there is a change in the least significant bit (LSB) of an expression from 1 or x or z (previous clocking event value) to 0, then the $fell function returns true, otherwise returns false.
+Syntax:
+              $fell (expression, <clocking_event>)
+Design specification:
+If the signal reset goes low (means reset is removed) then data should not be X or Z
+property prop;
+  $fell(reset) |-> not($isunknown(data));
+endproperty
+ 
+Example in procedural block
+always @(posedge clk) data = $fell(reset)? 0: x;
+Example for continuous assignment
+assign out = $fell(in1 & in2, @posedge clk);
+"
+40,"If there is a change in the least significant bit (LSB) of an expression from 0 or x or z (previous clocking event value) to 1, then the $rose function returns true, otherwise returns false.
+Syntax:
+$rose (expression, <clocking_event>) 
+Example in procedural block
+always @(posedge clk) out <= $rose(ack) & valid;
+Example for continuous assignment
+assign out = $rose(ack, @posedge clk);"
+39,"For accessing the sampling values of an expression, there are few system functions provided by System Verilog.System functions can be used to access current sampled values., past sampled values, and capture changes in the sampled values.
+The sample value function can be written in the assertions as well as inside procedural blocks.
+SVA Methods
+• $rose
+•  $fell
+• $stable
+• $past"
+38,"For accessing the sampling values of an expression, there are few system functions provided by System Verilog.
+System functions can be used to access current sampled values., past sampled values, and capture changes in the sampled values.
+The sample value function can be written in the assertions as well as inside procedural blocks.
+SVA Methods
+• $rose
+• $fell
+• $stable
+• $past"
+37,"A property is said to be recursive if its declaration has its own instantiation.
+property p1(req);
+  req2 or (en |-> ##1 p1(req));
+endproperty
+This property specifies that either req2 should be high or when en is high then property p1 should be true.
+Note:
+1.The recursive property must include some time interval otherwise, the simulation will get stuck in an infinite recursion loop.
+2.The ‘not’ and ‘disable iff’ operators can not be used in a recursive property.
+
+Example with not operator
+property p1(req);
+  req2 or (en |-> ##1 p1(req));
+endproperty
+
+property illegal_prop1(req);
+  not p1(req); // Illegal usage
+endproperty"
+36,"Instantiation of property in another property:
+The property expression can be instantiated in another property as shown in the below example.
+Instantiation of property in another property example
+property p1(req1, req2);
+  req1 |-> req2;
+endproperty
+
+property p2;
+  @(posedge clk);
+  Req3 ##2 |=> 
+    if(en)
+      p1(req1, req2)
+    else out = 0;
+endproperty
+
+
+
+"
+35,"On a successful match of a sequence, task or function (including system task/function) can be called.
+Calling functions or tasks in a sequence example:
+On matching a sequence, function func is called and its return value is stored locally in variable value and system task $display is used to print the local variable.
+sequence seq;
+  logic value;
+ req1 ##1 (req2, value = func, $display(""Output of function value = %0h"", value)) ;
+endsequence
+"
+34,"The local variables in a sequence or properties are like local variables in the function or task.
+1. Local variables are dynamically created inside sequence instance and removed at the end of the sequence
+2. Each sequence instance has its copy. Hence, the sequence can not access the local variable declared in another instance.
+Local variable in a sequence example 1:
+Consider a computing unit that reads data from a flip flop in 1 clock cycle, increments read data by 10, and writes it to the SRAM memory after 5 clock cycles.
+sequence seq;
+  int tmp_data;
+  (##1 ff_rdata, tmp_data = ff_rdata) ##5 (sram_wdata == (tmp_data+1));
+Endsequence
+"
+33,"ended in sequence:
+The endpoint of sequence detection returns true if the previously started sequence (another sequence) reaches the endpoint when the current sequence is under execution at that particular point in time else it returns false.
+Syntax:
+  <sequence>. ended
+ended in sequence example:
+sequence seq1;
+  @(posedge clk) $rose(en) ##1 req1 ## req2;
+endsequence
+sequence seq2;
+  @(posedge clk) reset ##2 seq1.ended ##1 ack;
+Endsequence
+
+Once reset goes high, after 2 clock cycles seq1 has to be ended and after 1 clock cycle ack is expected to come.
+"
+32,"The if(expression) is used to select property expressions based on the if condition.
+It is generally used in properties with implication operator-based assertions.
+Syntax:
+if(expression)
+  <property_exp1>
+else
+  <property_exp2>;
+if expression in property example
+property prop;
+  @(posedge clk) (req1 || req2) |-> 
+  if(req1)
+    (##1 ack1)
+  else
+   (##2 ack2);
+endproperty
+"
+31,"Not Operator in an assertion:
+The not operator is used to express the non-occurrence of the sequence.
+Syntax:
+                  not (<seq_exp>);
+not operator example:
+sequence seq;
+  req1 ## valid;
+endsequence
+property prop;
+  @(posedge clk) !en |-> (not (seq));
+endproperty
+assert property prop;"
+30,"The within operator is used to express the containment of a sequence within another sequence.
+Syntax:
+           <seq_exp> within <seq_exp>
+The construct seq1 within seq2 is an abbreviation for
+[1[*0: $] ##1 seq1 ##1 q[*0:$]] intersect seq2
+The “seq1 within seq2” matches for a finite interval of consecutive clock ticks if seq2 matches along with the complete interval and seq1 matches for sub-interval of consecutive clock tick and must satisfy the below conditions
+1. The start point of the match of seq1 must be greater than or equal to the start point of the match of seq2.
+2. The endpoint of the match of seq1 must be less than or equal to the endpoint of the match of seq2.
+within operator example:
+valid [*5] within (($rose req) ##1 req [*6])
+ Explanation:
+When valid is low consecutively for 5 cycles within req goes high and followed by 1 clock cycle req signal stays high for 6 cycles. The above sequence matches if req remains set for 6 clock cycles and valid is set for 5 consecutive clock cycles within the same window. "
+29,"The throughout operator is used under circumstances where the occurrence of certain values is prohibited while processing a transaction
+The construct exp throughout seq is an abbreviation for
+                            exp [*0: $] intersect seq;
+The “exp throughout seq” matches along with finite consecutive clock ticks when seq matches along with the interval and exp also evaluates to true for each clock tick of the interval.
+throughout operator Example:
+sequence en_rule;
+  @(posedge clk) $rose (en) ##0
+  (en) throughout (##2 (req && valid)) [*5]);
+endsequence
+ Explanation:
+The signal en is low at clock tick 1 and high at clock tick 2, $rose(en) is true at clock tick 2.
+To complete match of en_rule, the en signal is required to be high throughout a match of the subsequence (##1 (req && valid)) [*5]). In the above diagram, the en signal goes low before consecutive 5 clock cycles when req and valid signals are high then it is a violation of the en_rule.
+"
+28,"The first_match operator matches only for the first match out of all possible multiple matches.
+Syntax:
+                 first_match(<seq_exp>)
+The evaluation attempt for seq_expression happens on the same clock cycle when the first_match operator is evaluated.
+The first_match(<seq_exp>) produces no match when <seq_exp> produces no match The first_match(<seq_exp>) produces a match when the earliest match happens for <seq_exp> for the same clock tick.
+first_match operator example
+
+sequence seq;
+  first_match (req1 ## [1:4] req2);
+endsequence
+This is equivalent to
+                 req1 ##1 req2
+                 req1 ##2 req2
+                 req1 ##3 req2
+                  req1 ##4 req2
+"
+27,"The binary or operator is used when at least one of the two sequence operands is expected to match.
+Syntax:
+           <seq_exp> or <seq_exp>
+The requirement for or operation match
+1.Both operand sequences should start at the same time.
+2.The resultant or composite sequence match when either seq1 or seq2 matches
+3.The end time of the resultant or composite sequence is the end time of the operand that finishes last.
+Example for OR of two sequences
+                         (a1 ##1 a2) or (a3 ##1 a4 ##2 a5)
+Explanation
+Let’s consider a1 ##1 a2 as operand A and a3 ##1 a4 ##2 a5 as operand B.
+a1 ##1 a2 (Operand A):  The a1 evaluates to true followed by a2 one clock tick matches at clock tick 7
+a3 ##1 a4 ##2 a5 (operand B):  The operand a3 evaluates to true followed by a4 one clock tick later, followed by a5 two clock ticks later i.e., at clock tick 9.
+(a1 ##1 a2) and (a3 ##1 a4 ##2 a5):  The resultant sequence is said to be matched when both above operand sequence matches. The end times of matches for individual operand sequences A and B are clock ticks 7 and 9 respectively.
+The resultant sequence match should follow the conditions like individual operand sequences should start at the same clock tick (clock tick 6) and either of two operand sequences should match (clock ticks 7 and 9).
+
+
+"
+58,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+module assertion_nonoverlapped;
+  bit clk,a,b;
+  always #5 clk = ~clk; //clock generation
+  //generating 'a'
+  initial begin 
+        a=1; b=1;
+    #15 a=0; b=0;
+    #10 a=1; b=0;
+    #10 a=0; b=0;
+    #10 a=1; b=1;
+    #10;
+    $finish;
+  end
+  property p;
+    @(posedge clk) a |=> b;
+  endproperty
+  
+  //calling assert property
+  a_1: assert property(p);
+    
+  //wave dump
+  initial begin 
+    $dumpfile(""dump.vcd""); $dumpvars;
+  end
+endmodule
+Link for execution:https://www.edaplayground.com/x/Ve8U"
+57,"Here is the code written in system verilog using online platform edaplayground(https://edaplayground.com/)
+
+module asertion_overlapped;
+  bit clk,a,b;
+  always #5 clk = ~clk; //clock generation
+  //generating 'a'
+  initial begin 
+        a=1; b=1;
+    #15 a=0; b=0;
+    #10 a=1; b=0;
+    #10 a=0; b=0;
+    #10 a=1; b=1;
+    #10;
+    $finish;
+  end
+  
+  property p;
+    @(posedge clk) a |-> b;
+  endproperty
+  
+  //calling assert property
+  a_1: assert property(p);
+    
+  //wave dump
+  initial begin 
+    $dumpfile(""dump.vcd""); $dumpvars;
+  end
+endmodule
+Link for execution:https://www.edaplayground.com/x/8akR"
